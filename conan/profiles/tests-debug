@@ -1,0 +1,8 @@
+include(default)
+
+[settings]
+compiler.cppstd=20
+knecht4/*:build_type=Debug
+
+[conf]
+tools.build:skip_test=False

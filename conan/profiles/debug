@@ -1,0 +1,5 @@
+include(default)
+
+[settings]
+compiler.cppstd=20
+knecht4/*:build_type=Debug
