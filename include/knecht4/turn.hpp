@@ -11,6 +11,10 @@ enum class Turn : std::uint8_t {
     user = 1
 };
 
+std::uint8_t to_underlying(Turn turn);
+
+Turn next(Turn turn);
+
 std::ostream& operator<<(std::ostream& os, const Turn& turn);
 
 }  // namespace k4

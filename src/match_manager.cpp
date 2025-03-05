@@ -6,40 +6,47 @@
 
 namespace k4 {
 
-MatchManager::MatchManager()
-: board_{ std::make_unique<Board>() }
-, players_{ std::make_unique<Machine>(), std::make_unique<User>() }
-{}
+std::unique_ptr<Player>& MatchManager::get_current_player() {
+    return players_[to_underlying(turn_)];
+}
+
+std::unique_ptr<Player>& MatchManager::get_next_player() {
+    return players_[to_underlying(next(turn_))];
+}
 
 void MatchManager::run() {
     board_->reset();
 
     // Choose starting turn
-    auto turn = (utils::read_char("User starts or machine starts? [u/m] ", "um") == 'u')
+    turn_ = (utils::read_char("User starts or machine starts? [u/m] ", "um") == 'u')
         ? Turn::user
         : Turn::machine;
-    fmt::print("{} starts with '{}' pieces\n", turn, board_->get_next_piece());
+    get_current_player()->color(Piece::red);
+    get_next_player()->color(Piece::yellow);
+    fmt::print("{} starts with '{}' pieces\n", turn_, Piece::red);
+
+    // Print board
+    board_->print();
 
     for (;;) {
         // Choose player
-        auto& player = players_[static_cast<size_t>(turn)];
+        auto& player = get_current_player();
 
         // Insert piece
         auto column_index = player->move();
-        fmt::print("{} inserts a '{}' piece in column '{}'\n", turn, board_->get_next_piece(), column_index + 1);
+        fmt::print("{} inserts a '{}' piece in column {}\n", turn_, player->color(), column_index + 1);
         if (board_->full_column(column_index)) {
             fmt::print("\tError: column {} is full\n", column_index + 1);
             continue;
         }
-        auto row_index = board_->insert(column_index);
+        auto row_index = board_->insert(column_index, player->color());
 
         // Print board
         board_->print();
 
         // Check for end of game
-        if (auto line = board_->check({ row_index, column_index });
-            line.has_value()) {
-            fmt::print("End of game: {} wins!\n", turn);
+        if (auto line = board_->check({ row_index, column_index }); line) {
+            fmt::print("End of game: {} wins!\n", turn_);
             break;
         }
         if (board_->full()) {
@@ -48,7 +55,7 @@ void MatchManager::run() {
         }
 
         // Change turn
-        turn = turn == Turn::machine ? Turn::user : Turn::machine;
+        turn_ = next(turn_);
     }
 }
 

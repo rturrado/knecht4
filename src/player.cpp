@@ -5,6 +5,14 @@
 
 namespace k4 {
 
+[[nodiscard]] Piece Player::color() const {
+    return piece_;
+}
+
+void Player::color(Piece piece) {
+    piece_ = piece;
+}
+
 [[nodiscard]] std::uint8_t Machine::move() {
     return static_cast<std::uint8_t>(utils::RandomInt{ 0, 6 }());
 }

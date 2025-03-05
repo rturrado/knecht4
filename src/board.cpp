@@ -4,30 +4,21 @@
 
 namespace k4 {
 
-std::ostream& operator<<(std::ostream& os, const Piece& piece) {
-    return os << (piece == Piece::red ? "+" : "-");
-}
-
-Board::Board()
-: next_piece_{ Piece::red } {}
-
 void Board::reset() {
     std::for_each(data_.begin(), data_.end(), [](auto& column) {
         column.fill(std::nullopt);
     });
-    next_piece_ = Piece::red;
 }
 
 void Board::print() const {
     fmt::print("{}", *this);
 }
 
-[[nodiscard]] RowIndex Board::insert(ColumnIndex column_index) {
+[[nodiscard]] RowIndex Board::insert(ColumnIndex column_index, Piece piece) {
     assert(column_index < number_of_columns);
     if (auto number_of_empty_rows = get_number_of_empty_rows(column_index)) {
         auto row_index = RowIndex{ static_cast<RowIndex>(number_of_empty_rows - 1) };
-        data_[row_index][column_index] = next_piece_;
-        next_piece_ = next_piece_ == Piece::red ? Piece::yellow : Piece::red;
+        data_[row_index][column_index] = piece;
         return row_index;
     } else {
         throw BoardError{ fmt::format("trying to insert in a full column: {}", column_index) };
@@ -149,12 +140,8 @@ void Board::print() const {
 
 [[nodiscard]] Board::Cell Board::get_cell(std::uint8_t row_index, std::uint8_t column_index) const {
     assert(row_index < number_of_rows);
-    assert(row_index < number_of_columns);
+    assert(column_index < number_of_columns);
     return data_[row_index][column_index];
-}
-
-[[nodiscard]] Piece Board::get_next_piece() const {
-    return next_piece_;
 }
 
 [[nodiscard]] std::uint8_t Board::get_number_of_empty_rows(ColumnIndex column_index) const {
