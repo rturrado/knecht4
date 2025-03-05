@@ -1,6 +1,8 @@
 #include <fmt/format.h>
+#include <ostream>
 
 #include "knecht4/version.hpp"
+#include "knecht4/game_manager.hpp"
 
 void print_banner() {
     fmt::print("+-+-+-+-+-+-+-+\n");
@@ -10,5 +12,9 @@ void print_banner() {
 }
 
 int main(int argc, const char** argv) {
-    print_banner();
+    try {
+        k4::GameManager::get_instance().run();
+    } catch (const std::runtime_error& error) {
+        fmt::print("Error: {}", error.what());
+    }
 }

@@ -3,6 +3,10 @@ find_package(fmt REQUIRED)
 # Library
 add_library(${PROJECT_NAME}-lib
     "${CMAKE_CURRENT_SOURCE_DIR}/board.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/game_manager.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/match_manager.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/player.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/turn.cpp"
 )
 
 target_compile_features(${PROJECT_NAME}-lib PRIVATE
