@@ -119,7 +119,7 @@ void Board::print() const {
     int pieces_up = 0;
     auto end_row = RowIndex{ row_index };
     auto end_column = ColumnIndex{ column_index };
-    for (int i = row_index - 1, j = column_index + 1; i >= 0 && j < number_of_columns && data_[i][j] == piece; ++i, ++j) {
+    for (int i = row_index - 1, j = column_index + 1; i >= 0 && j < number_of_columns && data_[i][j] == piece; --i, ++j) {
         end_row = i;
         end_column = j;
         pieces_up++;
