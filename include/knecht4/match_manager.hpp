@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>  // unique_ptr
+
 #include "knecht4/board.hpp"
 #include "knecht4/player.hpp"
 

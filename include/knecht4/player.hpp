@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>  // uint8_t
+
 #include "knecht4/utils/console.hpp"
 
 namespace k4 {

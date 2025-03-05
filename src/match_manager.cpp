@@ -1,7 +1,5 @@
 #include "knecht4/match_manager.hpp"
 
-#include <memory>  // make_unique, unique_ptr
-
 #include "knecht4/player.hpp"
 #include "knecht4/turn.hpp"
 #include "knecht4/utils/console.hpp"
