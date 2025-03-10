@@ -164,10 +164,18 @@ void Board::print() const {
             return cell.has_value();
     });
 }
+std::ostream& operator<<(std::ostream& os, const CellIndex& cell_index) {
+    return os << fmt::format("[{}, {}]", cell_index.row + 1, cell_index.column + 1);
+}
+
+std::ostream& operator<<(std::ostream& os, const Line& line) {
+    return os << fmt::format("(start: {}, end: {})", line.start, line.end);
+}
 
 std::ostream& operator<<(std::ostream& os, const Board& board) {
-    os << "|1|2|3|4|5|6|7|\n";
+    os << " |1|2|3|4|5|6|7|\n";
     for (std::uint8_t i = 0; i < number_of_rows; ++i) {
+        os << i + 1;
         for (std::uint8_t j = 0; j < number_of_columns; ++j) {
             auto cell = board.get_cell(i, j);
             os << "|";

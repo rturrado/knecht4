@@ -62,9 +62,15 @@ private:
     Matrix data_;
 };
 
+std::ostream& operator<<(std::ostream& os, const CellIndex& cell_index);
+std::ostream& operator<<(std::ostream& os, const Line& line);
 std::ostream& operator<<(std::ostream& os, const Board& board);
 
 }  // namespace k4
 
+template <>
+struct fmt::formatter<k4::CellIndex> : ostream_formatter {};
+template <>
+struct fmt::formatter<k4::Line> : ostream_formatter {};
 template <>
 struct fmt::formatter<k4::Board> : ostream_formatter {};

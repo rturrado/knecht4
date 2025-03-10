@@ -47,6 +47,7 @@ void MatchManager::run() {
         // Check for end of game
         if (auto line = board_->check({ row_index, column_index }); line) {
             fmt::print("End of game: {} wins!\n", turn_);
+            fmt::print("+-+ Line: {} +-+\n", line.value());
             break;
         }
         if (board_->full()) {
