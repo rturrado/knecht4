@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iosfwd>
 #include <memory>  // unique_ptr
 
 #include "knecht4/board.hpp"
@@ -13,20 +14,24 @@ class MatchManager {
     std::unique_ptr<Player>& get_next_player();
 
 public:
-    static MatchManager& get_instance() {
-        static MatchManager instance;
-        return instance;
-    }
-
+    static MatchManager& get_instance(std::istream& is, std::ostream& os);
+    void set_board(std::unique_ptr<Board> board);
+    void set_turn(Turn turn);
+    void query_turn();
     void run();
+    void reset();
 
 private:
-    MatchManager() = default;
+    MatchManager(std::istream& is, std::ostream& os);
 
 private:
-    std::unique_ptr<Board> board_ = std::make_unique<Board>();
-    std::array<std::unique_ptr<Player>, 2> players_ = { std::make_unique<Machine>(), std::make_unique<User>() };
-    Turn turn_ = Turn::machine;
+    std::istream& is_;
+    std::ostream& os_;
+
+private:
+    std::unique_ptr<Board> board_;
+    std::array<std::unique_ptr<Player>, 2> players_;
+    Turn turn_;
 };
 
 }  // namespace k4

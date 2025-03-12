@@ -1,6 +1,7 @@
 #include "knecht4/board.hpp"
 
 #include <algorithm>  // fill
+#include <cmath>  // min
 #include <fmt/format.h>
 
 namespace k4 {
@@ -9,19 +10,24 @@ Board::Board() {
     std::fill(top_piece_row_indices_.begin(), top_piece_row_indices_.end(), bottom_row_index + 1);
 }
 
-Board::Board(const std::string& board) {
-    std::for_each(data_.begin(), data_.end(), [&board, i=0](Row& row) mutable {
-        std::generate(row.begin(), row.end(), [&board, i, j=0]() mutable {
-            auto ret = std::optional<Piece>{};
-            switch (board[i*number_of_columns + j++]) {
-                case 'r': ret = Piece::red; break;
-                case 'y': ret = Piece::yellow; break;
+Board::Board(const std::string& board)
+: Board{}
+{
+    for(std::uint8_t i = 0; i < number_of_rows; ++i) {
+        for (std::uint8_t j = 0; j < number_of_columns; ++j) {
+            // Fill data_
+            auto cell = board[i * number_of_columns + j];
+            switch (cell) {
+                case 'r': data_[i][j] = Piece::red; break;
+                case 'y': data_[i][j] = Piece::yellow; break;
                 default: break;
             }
-            return ret;
-        });
-        i++;
-    });
+            // Fill top_piece_row_indices_
+            if (cell != ' ') {
+                top_piece_row_indices_[j] = std::min(top_piece_row_indices_[j], i);
+            }
+        }
+    }
 }
 
 void Board::reset() {

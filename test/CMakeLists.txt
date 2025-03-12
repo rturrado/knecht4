@@ -2,8 +2,8 @@ find_package(GTest REQUIRED)
 
 add_executable(${PROJECT_NAME}-test
     "${CMAKE_CURRENT_SOURCE_DIR}/board.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/console.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/match_manager.cpp"
 )
 
 target_compile_features(${PROJECT_NAME}-test PRIVATE

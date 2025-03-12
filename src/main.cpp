@@ -1,5 +1,5 @@
 #include <fmt/format.h>
-#include <ostream>
+#include <iostream>
 
 #include "knecht4/version.hpp"
 #include "knecht4/game_manager.hpp"
@@ -14,7 +14,7 @@ void print_banner() {
 int main() {
     try {
         print_banner();
-        k4::GameManager::get_instance().run();
+        k4::GameManager::get_instance(std::cin, std::cout).run();
     } catch (const std::runtime_error& error) {
         fmt::print("Error: {}", error.what());
     }
