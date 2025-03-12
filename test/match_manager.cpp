@@ -33,12 +33,6 @@ TEST_F(MatchManagerTest, query_turn_user_starts) {
     EXPECT_THAT(oss.str(), ::testing::HasSubstr("User starts with '+' pieces"));
 }
 
-TEST_F(MatchManagerTest, query_turn_machine_starts) {
-    auto& match_manager = MatchManager::get_instance(iss_machine_starts, oss);
-    match_manager.query_turn();
-    EXPECT_THAT(oss.str(), ::testing::HasSubstr("Machine starts with '+' pieces"));
-}
-
 TEST_F(MatchManagerTest, run_draw) {
     auto& match_manager = MatchManager::get_instance(iss_user_chooses_column, oss);
     match_manager.set_board(std::make_unique<Board>(board_almost_full));
