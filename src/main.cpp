@@ -11,8 +11,9 @@ void print_banner() {
     fmt::print("{} <<>> {}\n", version::get_version(), version::get_release_year());
 }
 
-int main(int argc, const char** argv) {
+int main() {
     try {
+        print_banner();
         k4::GameManager::get_instance().run();
     } catch (const std::runtime_error& error) {
         fmt::print("Error: {}", error.what());
