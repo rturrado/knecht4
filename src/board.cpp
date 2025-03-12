@@ -1,13 +1,34 @@
 #include "knecht4/board.hpp"
 
+#include <algorithm>  // fill
 #include <fmt/format.h>
 
 namespace k4 {
+
+Board::Board() {
+    std::fill(top_piece_row_indices_.begin(), top_piece_row_indices_.end(), bottom_row_index + 1);
+}
+
+Board::Board(const std::string& board) {
+    std::for_each(data_.begin(), data_.end(), [&board, i=0](Row& row) mutable {
+        std::generate(row.begin(), row.end(), [&board, i, j=0]() mutable {
+            auto ret = std::optional<Piece>{};
+            switch (board[i*number_of_columns + j++]) {
+                case 'r': ret = Piece::red; break;
+                case 'y': ret = Piece::yellow; break;
+                default: break;
+            }
+            return ret;
+        });
+        i++;
+    });
+}
 
 void Board::reset() {
     std::for_each(data_.begin(), data_.end(), [](auto& column) {
         column.fill(std::nullopt);
     });
+    std::fill(top_piece_row_indices_.begin(), top_piece_row_indices_.end(), bottom_row_index + 1);
 }
 
 void Board::print() const {
@@ -16,13 +37,13 @@ void Board::print() const {
 
 [[nodiscard]] RowIndex Board::insert(ColumnIndex column_index, Piece piece) {
     assert(column_index < number_of_columns);
-    if (auto number_of_empty_rows = get_number_of_empty_rows(column_index)) {
-        auto row_index = RowIndex{ static_cast<RowIndex>(number_of_empty_rows - 1) };
-        data_[row_index][column_index] = piece;
-        return row_index;
-    } else {
+    if (full_column(column_index)) {
         throw BoardError{ fmt::format("trying to insert in a full column: {}", column_index) };
     }
+    auto row_index = top_piece_row_indices_[column_index] - 1;
+    data_[row_index][column_index] = piece;
+    top_piece_row_indices_[column_index] = row_index;
+    return row_index;
 }
 
 [[nodiscard]] std::optional<Line> Board::check_vertical(const CellIndex& cell_index) const {
@@ -144,17 +165,8 @@ void Board::print() const {
     return data_[row_index][column_index];
 }
 
-[[nodiscard]] std::uint8_t Board::get_number_of_empty_rows(ColumnIndex column_index) const {
-    assert(column_index < number_of_columns);
-    return std::count_if(data_.begin(), data_.end(),
-        [&column_index](const auto& row) {
-            return !row[column_index].has_value();
-        });
-}
-
 [[nodiscard]] bool Board::full_column(ColumnIndex column_index) const {
-    const auto& top_row = data_[0];
-    return top_row[column_index].has_value();
+    return top_piece_row_indices_[column_index] == top_row_index;
 }
 
 [[nodiscard]] bool Board::full() const {

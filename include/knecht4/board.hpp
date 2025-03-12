@@ -17,6 +17,8 @@ namespace k4 {
 constinit const std::uint8_t number_of_columns = 7;
 constinit const std::uint8_t number_of_rows = 6;
 constinit const std::uint8_t minimum_line_size = 4;
+constinit const std::uint8_t top_row_index = 0;
+constinit const std::uint8_t bottom_row_index = 5;
 
 using RowIndex = std::uint8_t;
 using ColumnIndex = std::uint8_t;
@@ -24,11 +26,13 @@ using ColumnIndex = std::uint8_t;
 struct CellIndex {
     RowIndex row;
     ColumnIndex column;
+    auto operator<=>(const CellIndex& other) const = default;
 };
 
 struct Line {
     CellIndex start;
     CellIndex end;
+    auto operator<=>(const Line& other) const = default;
 };
 
 struct BoardError : public std::runtime_error {
@@ -40,6 +44,7 @@ public:
     using Cell = std::optional<Piece>;
     using Row = std::array<Cell, number_of_columns>;
     using Matrix = std::array<Row, number_of_rows>;
+    using RowIndices = std::array<RowIndex, number_of_columns>;
 
 private:
     [[nodiscard]] std::optional<Line> check_vertical(const CellIndex& cell_index) const;
@@ -47,7 +52,10 @@ private:
     [[nodiscard]] std::optional<Line> check_diagonal(const CellIndex& cell_index) const;
     [[nodiscard]] std::optional<Line> check_diagonal_top_down(const CellIndex& cell_index) const;
     [[nodiscard]] std::optional<Line> check_diagonal_bottom_up(const CellIndex& cell_index) const;
-    [[nodiscard]] std::uint8_t get_number_of_empty_rows(ColumnIndex column_index) const;
+
+public:
+    Board();
+    explicit Board(const std::string& board);
 
 public:
     void reset();
@@ -60,6 +68,7 @@ public:
 
 private:
     Matrix data_;
+    RowIndices top_piece_row_indices_;
 };
 
 std::ostream& operator<<(std::ostream& os, const CellIndex& cell_index);
