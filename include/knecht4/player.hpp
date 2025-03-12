@@ -7,8 +7,6 @@
 namespace k4 {
 
 class Player {
-    Piece piece_;
-
 public:
     Player(std::istream& is, std::ostream& os);
     virtual ~Player() = default;
@@ -21,6 +19,7 @@ public:
 protected:
     std::istream& is_;
     std::ostream& os_;
+    Piece piece_;
 };
 
 class Machine : public Player {
