@@ -6,7 +6,7 @@ A Connect 4 game implementation. And a tribute to Lakers number 4 Dalton Knecht.
 
 - `CMake` >= 3.22
 - `git`
-- `Python` 3.x plus `pip`, with the following pacakge:
+- `Python` 3.x plus `pip`, with the following package:
   - `conan` >= 2.0 
 
 ## Build
